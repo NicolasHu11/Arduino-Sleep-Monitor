@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">BT LED blinker</string>
+    <string name="ToggleButton">LED</string>
+</resources>

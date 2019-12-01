@@ -14,7 +14,12 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 
-public class SingalActivity extends AppCompatActivity {
+
+
+public class SignalActivity extends AppCompatActivity {
+
+    // ref: https://www.youtube.com/watch?v=QEbljbZ4dNs
+    // ref: https://pusher.com/tutorials/graph-android
 
     private LineChart hrChart;
     private Thread thread;
@@ -23,18 +28,30 @@ public class SingalActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_singal);
+        setContentView(R.layout.activity_signal);
 
         // heart rate plot
         hrChart = (LineChart) findViewById(R.id.heart_rate_signal);
         configurePlotBasic(hrChart, "Heart Rate Signal");
         configureLegendsAndAxes(hrChart);
+        configureData(hrChart); // here data is empty
 
-        LineData data = new LineData();
-        data.setValueTextColor(Color.WHITE);
+        if(plotData){
+            addEntry(hrChart, "Heart Rate Data");
+            plotData = false;
+        }
 
-        // add empty data
-        hrChart.setData(data);
+        // Temperature Plot
+        LineChart tempChart = (LineChart) findViewById(R.id.temperature_signal);
+        configurePlotBasic(tempChart, "Temperature Signal");
+        configureLegendsAndAxes(tempChart);
+        configureData(tempChart); // here data is empty
+
+        if(plotData){
+            addEntry(tempChart, "Temperature Data");
+            plotData = false;
+        }
+
 
 
 
@@ -93,16 +110,38 @@ public class SingalActivity extends AppCompatActivity {
 
     }
 
-    private LineData configureData(){
+    private LineData configureData(LineChart thisPlot){
 
-        LineData heartRateData = new LineData();
+        LineData thisData = new LineData();
+        thisData.setValueTextColor(Color.WHITE);
 
+        // add empty data
+        thisPlot.setData(thisData);
 
-        return heartRateData;
+        return thisData;
     }
 
 
-    private void addEntry(LineChart thisPlot) {
+    private LineDataSet createSet(String dataSetLabel) {
+
+        LineDataSet set = new LineDataSet(null, dataSetLabel); //"Dynamic Data"
+        set.setAxisDependency(YAxis.AxisDependency.LEFT);
+        set.setLineWidth(3f);
+        set.setColor(Color.MAGENTA);
+        set.setHighlightEnabled(false);
+        set.setDrawValues(false);
+        set.setDrawCircles(false);
+        set.setMode(LineDataSet.Mode.CUBIC_BEZIER);
+        set.setCubicIntensity(0.2f);
+        // To show values of each point
+        set.setDrawValues(true);
+
+
+
+        return set;
+    }
+
+    private void addEntry(LineChart thisPlot, String dataSetLabel) {
 
         LineData data = thisPlot.getData();
 
@@ -112,15 +151,15 @@ public class SingalActivity extends AppCompatActivity {
             // set.addEntry(...); // can be called as well
 
             if (set == null) {
-                set = createSet();
+                set = createSet(dataSetLabel);
                 data.addDataSet(set);
             }
 
             data.addEntry(new Entry(set.getEntryCount(), (float) (Math.random() * 80) + 10f), 0);
 //            data.addEntry(new Entry(set.getEntryCount(), event.values[0] + 5), 0);
-            data.notifyDataChanged();
 
             // let the chart know it's data has changed
+            data.notifyDataChanged();
             thisPlot.notifyDataSetChanged();
 
             // limit the number of visible entries
@@ -131,21 +170,6 @@ public class SingalActivity extends AppCompatActivity {
             thisPlot.moveViewToX(data.getEntryCount());
 
         }
-    }
-
-
-    private LineDataSet createSet() {
-
-        LineDataSet set = new LineDataSet(null, "Dynamic Data");
-        set.setAxisDependency(YAxis.AxisDependency.LEFT);
-        set.setLineWidth(3f);
-        set.setColor(Color.MAGENTA);
-        set.setHighlightEnabled(false);
-        set.setDrawValues(false);
-        set.setDrawCircles(false);
-        set.setMode(LineDataSet.Mode.CUBIC_BEZIER);
-        set.setCubicIntensity(0.2f);
-        return set;
     }
 
 

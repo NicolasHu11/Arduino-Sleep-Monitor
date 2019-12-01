@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">BT LED blinker</string>
     <string name="ToggleButton">LED</string>
+    <string name="temperature_text_view">Temperature:</string>
+    <string name="heart_rate_text_view">Heart Rate:</string>
+    <string name="gyroscope_text_view">Gyroscope:</string>
 </resources>

@@ -37,12 +37,12 @@
 
 
     <com.github.mikephil.charting.charts.LineChart
-        android:id="@+id/movement_counts"
+        android:id="@+id/movement_count"
         android:layout_width="match_parent"
         android:layout_height="100sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/breath_rate">
+        app:layout_constraintTop_toBottomOf="@+id/breath_rate"/>
 
 
 
@@ -54,7 +54,7 @@
         android:layout_marginTop="8dp"
         android:text="@string/sleep_analysis_24h_week_text_view"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/movement_counts" />
+        app:layout_constraintTop_toBottomOf="@+id/movement_count" />
 
     // ref on stacked bar plot: https://www.youtube.com/watch?v=jTYi0Q7lLco
     <com.github.mikephil.charting.charts.HorizontalBarChart

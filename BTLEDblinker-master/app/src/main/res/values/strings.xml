@@ -4,4 +4,6 @@
     <string name="temperature_text_view">Temperature:</string>
     <string name="heart_rate_text_view">Heart Rate:</string>
     <string name="gyroscope_text_view">Gyroscope:</string>
+    <string name="processed_signals_24h_text_view">Processed Signals(24h)</string>
+    <string name="sleep_analysis_24h_week_text_view">Sleep Analysis (24h + Week)</string>
 </resources>

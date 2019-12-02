@@ -27,29 +27,18 @@
         app:layout_constraintTop_toBottomOf="@id/textView" />
 
     <com.github.mikephil.charting.charts.LineChart
-        android:id="@+id/AcZ_signal"
+        android:id="@+id/Gyro_signal"
         android:layout_width="match_parent"
-        android:layout_height="100sp"
+        android:layout_height="150sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/AcY_signal">
-
-    </com.github.mikephil.charting.charts.LineChart>
+        app:layout_constraintTop_toBottomOf="@+id/Acc_signal" />
 
     <com.github.mikephil.charting.charts.LineChart
-        android:id="@+id/AcY_signal"
+        android:id="@+id/Acc_signal"
         android:layout_width="match_parent"
-        android:layout_height="100sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/AcX_signal" />
-
-    <com.github.mikephil.charting.charts.LineChart
-        android:id="@+id/AcX_signal"
-        android:layout_width="match_parent"
-        android:layout_height="100sp"
+        android:layout_height="150sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"

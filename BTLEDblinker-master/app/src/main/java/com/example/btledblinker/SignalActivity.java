@@ -53,6 +53,20 @@ public class SignalActivity extends AppCompatActivity {
         }
 
 
+        // Accelerometer plot
+        LineChart accChart = (LineChart) findViewById(R.id.Acc_signal);
+        configurePlotBasic(accChart, "Temperature Signal");
+        configureLegendsAndAxes(accChart);
+        configureData(accChart); // here data is empty
+
+
+
+        // Gyroscope plot
+        LineChart gyroChart = (LineChart) findViewById(R.id.Gyro_signal);
+        configurePlotBasic(gyroChart, "Gyroscope Signal");
+        configureLegendsAndAxes(gyroChart);
+        configureData(gyroChart); // here data is empty
+
 
 
     }

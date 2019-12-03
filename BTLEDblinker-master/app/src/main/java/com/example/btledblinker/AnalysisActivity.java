@@ -18,9 +18,10 @@ public class AnalysisActivity extends AppCompatActivity {
 
         // 1. initialize all five plots, and have initial settings
         LineChart heartRateProPlot = (LineChart) findViewById(R.id.heart_rate_processed);
-        configurePlotBasic(heartRateProPlot, "Heart Rate Processed");
-        configureLegendsAndAxes(heartRateProPlot);
-        configureData(heartRateProPlot); // here data is empty
+        // these need to re-implement in this class
+//        configurePlotBasic(heartRateProPlot, "Heart Rate Processed");
+//        configureLegendsAndAxes(heartRateProPlot);
+//        configureLegendsAndAxesData(heartRateProPlot); // here data is empty
 
         LineChart breathRatePlot= (LineChart) findViewById(R.id.breath_rate);
 
@@ -33,6 +34,7 @@ public class AnalysisActivity extends AppCompatActivity {
         BarChart sleepWeekPlot = (BarChart) findViewById(R.id.sleep_week);
 
         // 2. process all the data here.
+
 
 
 

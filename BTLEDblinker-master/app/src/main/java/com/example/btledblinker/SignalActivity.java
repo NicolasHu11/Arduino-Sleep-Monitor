@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
@@ -14,6 +15,14 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 
+import java.sql.Date;
+import java.sql.Time;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
 
 
 public class SignalActivity extends AppCompatActivity {
@@ -24,6 +33,9 @@ public class SignalActivity extends AppCompatActivity {
     private LineChart hrChart;
     private Thread thread;
     private boolean plotData = true;
+    private List<Integer> testData = new ArrayList<Integer>();
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +52,24 @@ public class SignalActivity extends AppCompatActivity {
             addEntry(hrChart, "Heart Rate Data");
             plotData = false;
         }
+
+        // this is default data set 1...50
+        for (int i = 0; i < 50; i++) {
+            testData.add(i);
+        }
+
+        List<Entry> entries = new ArrayList<Entry>();
+        for (Integer thisData: testData ) {
+            entries.add(new Entry(thisData, thisData));
+        }
+        LineDataSet dataSet = new LineDataSet(entries, "Label"); // add entries to dataset
+
+        LineData lineData = new LineData(dataSet);
+        hrChart.setData(lineData);
+        hrChart.invalidate(); // refresh
+        Log.d("hrChart", testData.toString());
+
+
 
         // Temperature Plot
         LineChart tempChart = (LineChart) findViewById(R.id.temperature_signal);
@@ -111,8 +141,8 @@ public class SignalActivity extends AppCompatActivity {
         YAxis leftAxis = thisPlot.getAxisLeft();
         leftAxis.setTextColor(Color.WHITE);
         leftAxis.setDrawGridLines(false);
-        leftAxis.setAxisMaximum(10f);
-        leftAxis.setAxisMinimum(0f);
+//        leftAxis.setAxisMaximum(10f);
+//        leftAxis.setAxisMinimum(0f);
         leftAxis.setDrawGridLines(true);
 
         YAxis rightAxis = thisPlot.getAxisRight();

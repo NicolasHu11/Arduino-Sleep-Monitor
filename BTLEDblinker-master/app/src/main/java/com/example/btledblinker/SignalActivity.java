@@ -139,7 +139,7 @@ public class SignalActivity extends AppCompatActivity {
         // enable scaling and dragging
         thisPlot.setDragEnabled(true);
         thisPlot.setScaleEnabled(true);
-        thisPlot.setDrawGridBackground(false);
+        thisPlot.setDrawGridBackground(true);
         // if disabled, scaling can be done on x- and y-axis separately
         thisPlot.setPinchZoom(true);
         // set an alternative background color
@@ -152,18 +152,18 @@ public class SignalActivity extends AppCompatActivity {
         Legend l = thisPlot.getLegend();
         // modify the legend ...
         l.setForm(Legend.LegendForm.LINE);
-        l.setTextColor(Color.WHITE);
+        l.setTextColor(Color.BLACK);
 
 
         XAxis xl = thisPlot.getXAxis();
-        xl.setTextColor(Color.WHITE);
+        xl.setTextColor(Color.BLACK);
         xl.setDrawGridLines(true);
         xl.setAvoidFirstLastClipping(true);
         xl.setEnabled(true);
 
         YAxis leftAxis = thisPlot.getAxisLeft();
-        leftAxis.setTextColor(Color.WHITE);
-        leftAxis.setDrawGridLines(false);
+        leftAxis.setTextColor(Color.BLACK);
+//        leftAxis.setDrawGridLines(false);
 //        leftAxis.setAxisMaximum(10f);
 //        leftAxis.setAxisMinimum(0f);
         leftAxis.setDrawGridLines(true);

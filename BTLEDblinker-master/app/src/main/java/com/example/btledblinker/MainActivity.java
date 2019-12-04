@@ -520,7 +520,7 @@ public class MainActivity extends Activity {
                                     try {
                                         SignalActivity.addEntry(hrChart,"hr",Integer.valueOf(a.substring(2, a.length())) );
                                     } catch (Exception e) {
-                                        Log.d("BT thread", "update HR chart, error :" + e.toString());
+//                                        Log.d("BT thread", "update HR chart, error :" + e.toString());
                                     }
 
 
@@ -531,7 +531,7 @@ public class MainActivity extends Activity {
                                     try {
                                         SignalActivity.addEntry(tempChart,"temp", Float.valueOf(a.substring(4, a.length())));
                                     } catch (Exception e) {
-                                        Log.d("BT thread", "update HR chart, error :" + e.toString());
+//                                        Log.d("BT thread", "update Temp chart, error :" + e.toString());
                                     }
                                 }
                                 if (a.contains("GY")) {
@@ -549,7 +549,7 @@ public class MainActivity extends Activity {
                                             SignalActivity.addEntry(gyroChart,"temp", values);
 
                                         } catch (Exception e) {
-                                            Log.d("BT thread", "update HR chart, error :" + e.toString());
+//                                            Log.d("BT thread", "update GY chart, error :" + e.toString());
                                         }
                                     }
                                     catch(Exception e)
@@ -572,7 +572,7 @@ public class MainActivity extends Activity {
                                             SignalActivity.addEntry(accChart,"temp", values);
 
                                         } catch (Exception e) {
-                                            Log.d("BT thread", "update HR chart, error :" + e.toString());
+//                                            Log.d("BT thread", "update ACC chart, error :" + e.toString());
                                         }
                                     }
                                     catch(Exception e)

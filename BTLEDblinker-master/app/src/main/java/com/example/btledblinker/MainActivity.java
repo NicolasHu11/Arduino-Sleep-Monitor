@@ -74,10 +74,10 @@ public class MainActivity extends Activity {
 
     public final static String EXTRA_MESSAGE = "MESSAGE";
     private ListView obj;
-    DBHelper mydb;
-    TEMPHelper tmpdb;
-    GyroHelper gydb;
-    ACHelper acdb;
+    static DBHelper mydb;
+    static TEMPHelper tmpdb;
+    static GyroHelper gydb;
+    static ACHelper acdb;
 
 
 
@@ -521,7 +521,7 @@ public class MainActivity extends Activity {
                                         gydb.insertContact(Integer.valueOf(gy[0].substring(2, gy[0].length())), Integer.valueOf(gy[1]),
                                                 Integer.valueOf(gy[2]), simpleDateFormat.format(date).toString());
                                     }
-                                    catch(ArrayIndexOutOfBoundsException e)
+                                    catch(Exception e)
                                     {
                                         Log.d("gyoutofbounds",simpleDateFormat.format(date).toString());
                                     }
@@ -534,7 +534,7 @@ public class MainActivity extends Activity {
                                         acdb.insertContact(Integer.valueOf(ac[0].substring(2, ac[0].length())), Integer.valueOf(ac[1]),
                                                 Integer.valueOf(ac[2]), simpleDateFormat.format(date).toString());
                                     }
-                                    catch(ArrayIndexOutOfBoundsException e)
+                                    catch(Exception e)
                                     {
                                         Log.d("acoutofbounds",simpleDateFormat.format(date).toString());
                                     }
@@ -542,8 +542,6 @@ public class MainActivity extends Activity {
                             }
 
                         }
-
-
 
 
 

@@ -1,23 +1,23 @@
 package com.example.btledblinker;
 
-import java.text.DateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Hashtable;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteDatabase;
-import java.util.Date;
+import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class TEMPHelper extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "Mytemp.db";
     public static final String CONTACTS_TABLE_NAME = "temp_data";
-    public static final String CONTACTS_COLUMN_HR = "temperature";
+    public static final String CONTACTS_COLUMN_TEMP = "temperature";
     public static final String CONTACTS_COLUMN_TIME = "time";
+    public final String columnlist[] = new String[] {CONTACTS_COLUMN_TEMP,CONTACTS_COLUMN_TIME};
 
     private HashMap hp;
 
@@ -58,17 +58,23 @@ public class TEMPHelper extends SQLiteOpenHelper {
     }
 
 
-    public ArrayList<String> getAllCotacts() {
-        ArrayList<String> array_list = new ArrayList<String>();
+    public ArrayList<ArrayList<String>> getAllCotacts() {
+        ArrayList<ArrayList<String>> array_list = new ArrayList<ArrayList<String>>();
 
         //hp = new HashMap();
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res = db.rawQuery("select * from temp_data", null);
         res.moveToFirst();
 
-        while (res.isAfterLast() == false) {
-            array_list.add(res.getString(res.getColumnIndex(CONTACTS_COLUMN_HR)));
-            res.moveToNext();
+        for (String i:columnlist) {
+            ArrayList<String> a = new ArrayList<String>();
+            Log.d("column name", i);
+            res.moveToFirst();
+            while (res.isAfterLast() == false) {
+                a.add(res.getString(res.getColumnIndex(i)));
+                res.moveToNext();
+            }
+            array_list.add(a);
         }
         return array_list;
     }

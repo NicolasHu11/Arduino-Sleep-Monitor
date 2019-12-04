@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -88,7 +87,7 @@ public class GyroHelper extends SQLiteOpenHelper {
 
         for (String i:columnlist) {
             ArrayList<String> a = new ArrayList<String>();
-            Log.d("column name", i);
+//            Log.d("column name", i);
             res.moveToFirst();
             while (res.isAfterLast() == false) {
                 a.add(res.getString(res.getColumnIndex(i)));

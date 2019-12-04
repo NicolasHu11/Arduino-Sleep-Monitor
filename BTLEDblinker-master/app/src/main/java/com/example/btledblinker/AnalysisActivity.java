@@ -99,19 +99,13 @@ public class AnalysisActivity extends AppCompatActivity {
     private void processMovement() {
         ArrayList<ArrayList<String>> gyro_data = gydb.getAllCotacts();
         ArrayList<Integer> x = new ArrayList<Integer>();
-        for(String a:gyro_data.get(0))
-        {
-            x.add(Integer.parseInt(a));
-        }
         ArrayList<Integer> y = new ArrayList<Integer>();
-        for(String a:gyro_data.get(1))
-        {
-            y.add(Integer.parseInt(a));
-        }
         ArrayList<Integer> z = new ArrayList<Integer>();
-        for(String a:gyro_data.get(2))
+        for (int i =0; i <gyro_data.get(0).size(); i++)
         {
-            z.add(Integer.parseInt(a));
+            x.add(Integer.parseInt(gyro_data.get(0).get(i)));
+            y.add(Integer.parseInt(gyro_data.get(1).get(i)));
+            z.add(Integer.parseInt(gyro_data.get(2).get(i)));
         }
         SimpleDateFormat formatter =new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         ArrayList<Date> time = new ArrayList<Date>();
@@ -125,23 +119,15 @@ public class AnalysisActivity extends AppCompatActivity {
             }
         }
         ArrayList<Integer> x_delta = new ArrayList<Integer>();
-        for(int i = 1; i< x.size(); i++)
-        {
-            x_delta.add(x.get(i)-x.get(i-1));
-        }
         ArrayList<Integer> y_delta = new ArrayList<Integer>();
-        for(int i = 1; i< y.size(); i++)
-        {
-            y_delta.add(y.get(i)-y.get(i-1));
-        }
         ArrayList<Integer> z_delta = new ArrayList<Integer>();
-        for(int i = 1; i< z.size(); i++)
-        {
-            z_delta.add(z.get(i)-z.get(i-1));
-        }
+
         ArrayList<Integer> total_difference = new ArrayList<Integer>();
         for(int i = 1; i< x.size();i++)
         {
+            x_delta.add(x.get(i)-x.get(i-1));
+            y_delta.add(y.get(i)-y.get(i-1));
+            z_delta.add(z.get(i)-z.get(i-1));
             total_difference.add(Math.abs(x.get(i)-x.get(i-1))+Math.abs(y.get(i)-y.get(i-1))+Math.abs(z.get(i)-z.get(i-1)));
         }
 
@@ -169,8 +155,7 @@ public class AnalysisActivity extends AppCompatActivity {
                 }
         }
 
-        Log.d("sleeplength",String.valueOf(sleep.size()));
-        Log.d("timelength",String.valueOf(time.size()));
+
 
         long sleeptime=0;
         long totaltime=0;
@@ -186,11 +171,27 @@ public class AnalysisActivity extends AppCompatActivity {
         mTotaltimeBuffer.setText(String.valueOf(totaltime));
 
 
+        ArrayList<Integer> mpm = new ArrayList<Integer>();
+
+        int movement_count;
+        for(int i =0; i<time.size()-1;i++) {
+            movement_count=0;
+            for (int j = i; j < time.size() - 1; j++)
+                if (calculatetimediff(time.get(j), time.get(i)) < 60) {
+                    if (movement.get(j) == 1) {
+                        movement_count=movement_count+1;
+                    }
+                } else {
+                    mpm.add(movement_count);
+                    Log.d("mpm",String.valueOf(movement_count));
+                    i=j;
+                }
+        }
 
 
 
         // plotting
-        List<Entry> hrEntries = constructEntries(total_difference);
+        List<Entry> hrEntries = constructEntries(mpm);
         LineDataSet hrDataSet = constructHRDataSet(hrEntries, movementCountPlot,"movement");
         constructLineData(hrDataSet, movementCountPlot);
 

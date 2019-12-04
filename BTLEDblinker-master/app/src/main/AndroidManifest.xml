@@ -22,8 +22,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".AnalysisActivity"></activity>
+        <activity android:name=".SignalActivity"></activity>
         <!-- <activity android:name=".SignalActivity"></activity> -->
-        <activity android:name=".SignalActivity">
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

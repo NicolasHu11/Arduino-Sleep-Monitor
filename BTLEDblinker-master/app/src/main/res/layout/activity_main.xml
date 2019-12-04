@@ -11,22 +11,33 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
-        <ToggleButton
+        <Button
+            android:id="@+id/checkboxLED1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Calculate"
-            android:textOff="Off"
-            android:textOn="On"
-            android:id="@+id/checkboxLED1"
+            android:layout_marginLeft="360dp"
             android:layout_marginTop="10dp"
             android:checked="false"
-            android:layout_alignLeft="@+id/bluetoothStatus"
-            android:layout_alignStart="@+id/bluetoothStatus"
             android:scaleX="1.7"
             android:scaleY="1.7"
-            android:textStyle="bold"
-            android:layout_gravity="center_horizontal" />
+            android:text="Analysis"
+            android:textStyle="bold" />
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <Button
+            android:id="@+id/Activitybutton1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="100dp"
+            android:layout_marginTop="10dp"
+            android:checked="false"
+            android:scaleX="1.7"
+            android:scaleY="1.7"
+            android:text="Signal"
+            android:textStyle="bold" />
 
         <LinearLayout
             android:orientation="horizontal"

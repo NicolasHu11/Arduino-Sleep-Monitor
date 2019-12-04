@@ -1,9 +1,11 @@
 package com.example.btledblinker;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
@@ -18,6 +20,7 @@ import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 
 public class SignalActivity extends AppCompatActivity {
 
+    private Button bluetooth_activity;
     // ref: https://www.youtube.com/watch?v=QEbljbZ4dNs
     // ref: https://pusher.com/tutorials/graph-android
 
@@ -29,6 +32,7 @@ public class SignalActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signal);
+        bluetooth_activity = (Button) findViewById(R.id.Bluetooth1);
 
         // heart rate plot
         hrChart = (LineChart) findViewById(R.id.heart_rate_signal);
@@ -66,6 +70,13 @@ public class SignalActivity extends AppCompatActivity {
         configurePlotBasic(gyroChart, "Gyroscope Signal");
         configureLegendsAndAxes(gyroChart);
         configureData(gyroChart); // here data is empty
+
+        bluetooth_activity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
 
 

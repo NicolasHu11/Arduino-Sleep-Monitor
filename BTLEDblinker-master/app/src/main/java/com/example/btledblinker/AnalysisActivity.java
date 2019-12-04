@@ -97,7 +97,9 @@ public class AnalysisActivity extends AppCompatActivity {
 
 
     private void processMovement() {
+        // get data from DB, as String
         ArrayList<ArrayList<String>> gyro_data = gydb.getAllCotacts();
+        // turn all String into Int.
         ArrayList<Integer> x = new ArrayList<Integer>();
         for(String a:gyro_data.get(0))
         {
@@ -113,6 +115,7 @@ public class AnalysisActivity extends AppCompatActivity {
         {
             z.add(Integer.parseInt(a));
         }
+        // turn timestamp string to Date
         SimpleDateFormat formatter =new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         ArrayList<Date> time = new ArrayList<Date>();
         for(String a:gyro_data.get(3))
@@ -124,6 +127,7 @@ public class AnalysisActivity extends AppCompatActivity {
 
             }
         }
+        // process the XYZ data
         ArrayList<Integer> x_delta = new ArrayList<Integer>();
         for(int i = 1; i< x.size(); i++)
         {
@@ -140,20 +144,22 @@ public class AnalysisActivity extends AppCompatActivity {
             z_delta.add(z.get(i)-z.get(i-1));
         }
         ArrayList<Integer> total_difference = new ArrayList<Integer>();
+
         for(int i = 1; i< x.size();i++)
         {
             total_difference.add(Math.abs(x.get(i)-x.get(i-1))+Math.abs(y.get(i)-y.get(i-1))+Math.abs(z.get(i)-z.get(i-1)));
         }
-
+        // get movement data, 1 for movement, 0 for non
         ArrayList <Integer> movement = new ArrayList<Integer>();
         for(int i =0; i<total_difference.size();i++)
         {
-            if(total_difference.get(i)<10000)
+            if(total_difference.get(i)<10000) // hard threshold
                 movement.add(0);
             else
                 movement.add(1);
         }
 
+        // process to get sleep data.
         ArrayList<Boolean> sleep = new ArrayList<Boolean>();
 //        int check;
         for(int i =0; i<time.size()-1;i++) {
@@ -172,6 +178,7 @@ public class AnalysisActivity extends AppCompatActivity {
         Log.d("sleeplength",String.valueOf(sleep.size()));
         Log.d("timelength",String.valueOf(time.size()));
 
+        //
         long sleeptime=0;
         long totaltime=0;
 //        long totaltime= calculatetimediff(time.get(time.size()-1),time.get(0));

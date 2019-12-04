@@ -9,12 +9,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.LineChart;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.lang.Math;
 
-import static com.example.btledblinker.MainActivity.acdb;
 import static com.example.btledblinker.MainActivity.gydb;
-import static com.example.btledblinker.MainActivity.mydb;
-import static com.example.btledblinker.MainActivity.tmpdb;
 
 public class AnalysisActivity extends AppCompatActivity {
     private Button bluetooth_activity;
@@ -44,10 +44,7 @@ public class AnalysisActivity extends AppCompatActivity {
 
         BarChart sleepWeekPlot = (BarChart) findViewById(R.id.sleep_week);
 
-        ArrayList<ArrayList<String>> gyro_data = gydb.getAllCotacts();
-        ArrayList<ArrayList<String>> ac_data = acdb.getAllCotacts();
-        ArrayList<ArrayList<String>> temp_data = tmpdb.getAllCotacts();
-        ArrayList<ArrayList<String>> hr_data = mydb.getAllCotacts();
+        processMovement();
 
 
         bluetooth_activity.setOnClickListener(new View.OnClickListener() {
@@ -85,6 +82,54 @@ public class AnalysisActivity extends AppCompatActivity {
 
     private void processMovement() {
         ArrayList<ArrayList<String>> gyro_data = gydb.getAllCotacts();
+        ArrayList<Integer> x = new ArrayList<Integer>();
+        for(String a:gyro_data.get(0))
+        {
+            x.add(Integer.parseInt(a));
+        }
+        ArrayList<Integer> y = new ArrayList<Integer>();
+        for(String a:gyro_data.get(1))
+        {
+            y.add(Integer.parseInt(a));
+        }
+        ArrayList<Integer> z = new ArrayList<Integer>();
+        for(String a:gyro_data.get(2))
+        {
+            z.add(Integer.parseInt(a));
+        }
+        SimpleDateFormat formatter =new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        ArrayList<Date> time = new ArrayList<Date>();
+        for(String a:gyro_data.get(3))
+        {
+            try{
+                time.add(formatter.parse(a));
+            }
+            catch(java.text.ParseException e){
+
+            }
+        }
+        ArrayList<Integer> x_delta = new ArrayList<Integer>();
+        for(int i = 1; i< x.size(); i++)
+        {
+            x_delta.add(x.get(i)-x.get(i-1));
+        }
+        ArrayList<Integer> y_delta = new ArrayList<Integer>();
+        for(int i = 1; i< y.size(); i++)
+        {
+            y_delta.add(y.get(i)-y.get(i-1));
+        }
+        ArrayList<Integer> z_delta = new ArrayList<Integer>();
+        for(int i = 1; i< z.size(); i++)
+        {
+            z_delta.add(z.get(i)-z.get(i-1));
+        }
+        ArrayList<Integer> total_difference = new ArrayList<Integer>();
+        for(int i = 1; i< x.size();i++)
+        {
+            total_difference.add(Math.abs(x.get(i)-x.get(i-1))+Math.abs(y.get(i)-y.get(i-1))+Math.abs(z.get(i)-z.get(i-1)));
+        }
+
+
     }
 
     private void processSleep24h() {
@@ -93,6 +138,7 @@ public class AnalysisActivity extends AppCompatActivity {
     private void processSleepWeek() {
 
     }
+
 
 
 

@@ -26,7 +26,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service android:name=".HelloIntentService" />
+        <service
+            android:enabled="true"
+            android:name=".MyService"
+            android:label="MyService">
+        </service>
     </application>
 
 </manifest>

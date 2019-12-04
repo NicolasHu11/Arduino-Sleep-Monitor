@@ -74,10 +74,10 @@ public class MainActivity extends Activity {
 
     public final static String EXTRA_MESSAGE = "MESSAGE";
     private ListView obj;
-    DBHelper mydb;
-    TEMPHelper tmpdb;
-    GyroHelper gydb;
-    ACHelper acdb;
+    static DBHelper mydb;
+    static TEMPHelper tmpdb;
+    static GyroHelper gydb;
+    static ACHelper acdb;
 
 
 

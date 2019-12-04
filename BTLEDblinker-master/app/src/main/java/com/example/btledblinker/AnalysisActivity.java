@@ -9,7 +9,6 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Description;
@@ -29,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static com.example.btledblinker.MainActivity.acdb;
 import static com.example.btledblinker.MainActivity.gydb;
 import static com.example.btledblinker.MainActivity.mydb;
 import static com.example.btledblinker.MainActivity.tmpdb;
@@ -159,6 +159,7 @@ public class AnalysisActivity extends AppCompatActivity {
                     break;
                 }
         }
+        Log.d("length of heartrate", String.valueOf(time.size()));
 
         List<Entry> hrEntries = constructEntries(hrpm);
         LineDataSet hrDataSet = constructHRDataSet(hrEntries, heartRateProPlot,"heartrate");
@@ -197,39 +198,47 @@ public class AnalysisActivity extends AppCompatActivity {
         ArrayList<Boolean> breath = new ArrayList<Boolean>();
         for(int i=0; i< time.size()-2; i++)
         {
-            if(tp_delta.get(i)>0)
+            if(tp_delta.get(i)>=0)
             {
                 for(int j=i; j<time.size()-2;j++)
                 {
-                    if(tp_delta.get(j)>0) {
+                    if(tp_delta.get(j)>=0) {
                         breath.add(false);
-                        continue;
+//                        continue;
                     }
-                    else
+                    else {
                         breath.add(true);
+                        i=j;
+                        break;
+                    }
                 }
             }
+            else
+                breath.add(false);
         }
+//        Log.d("lenth of tp_delta", String.valueOf(tp_delta.size()));
+//        Log.d("lenth of breath", String.valueOf(breath.size()));
+        Log.d("length of temperature", String.valueOf(time.size()));
 
         ArrayList<Integer> bpm = new ArrayList<Integer>();
 
         int breath_count = 0;
-        for(int i =0; i<time.size()-2;i++) {
+        for(int i =0; i<time.size()-3;i++) {
             breath_count=0;
-            for (int j = i; j < time.size() - 2; j++)
+            for (int j = i; j < time.size() - 3; j++)
                 if (calculatetimediff(time.get(j), time.get(i)) < 6) {
                     if (breath.get(j)) {
                         breath_count=breath_count+1;
                     }
                 } else {
                     bpm.add(breath_count);
-                    Log.d("bpm else ",String.valueOf(breath_count));
+//                    Log.d("bpm else ",String.valueOf(breath_count));
                     i=j;
                     break;
                 }
         }
 
-        Log.d("bpm after for loop",String.valueOf(bpm.size()));
+//        Log.d("bpm after for loop",String.valueOf(bpm.size()));
 
         List<Entry> hrEntries = constructEntries(bpm);
         LineDataSet hrDataSet = constructHRDataSet(hrEntries, breathRatePlot,"breath");
@@ -285,48 +294,48 @@ public class AnalysisActivity extends AppCompatActivity {
         }
 
 
-//        ArrayList<ArrayList<String>> ac_data = acdb.getAllCotacts();
-//        ArrayList<Integer> x2 = new ArrayList<Integer>();
-//        ArrayList<Integer> y2 = new ArrayList<Integer>();
-//        ArrayList<Integer> z2 = new ArrayList<Integer>();
-//        for (int i =0; i <ac_data.get(0).size(); i++)
-//        {
-//            x2.add(Integer.parseInt(ac_data.get(0).get(i)));
-//            y2.add(Integer.parseInt(ac_data.get(1).get(i)));
-//            z2.add(Integer.parseInt(ac_data.get(2).get(i)));
-//        }
-//        SimpleDateFormat formatter2 =new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-//        ArrayList<Date> time2 = new ArrayList<Date>();
-//        for(String a:ac_data.get(3))
-//        {
-//            try{
-//                time2.add(formatter2.parse(a));
-//            }
-//            catch(java.text.ParseException e){
-//
-//            }
-//        }
-//        ArrayList<Integer> x2_delta = new ArrayList<Integer>();
-//        ArrayList<Integer> y2_delta = new ArrayList<Integer>();
-//        ArrayList<Integer> z2_delta = new ArrayList<Integer>();
-//
-//        ArrayList<Integer> total_difference2 = new ArrayList<Integer>();
-//        for(int i = 1; i< x2.size();i++)
-//        {
-//            x2_delta.add(x2.get(i)-x2.get(i-1));
-//            y2_delta.add(y2.get(i)-y2.get(i-1));
-//            z2_delta.add(z2.get(i)-z2.get(i-1));
-//            total_difference2.add(Math.abs(x2.get(i)-x2.get(i-1))+Math.abs(y2.get(i)-y2.get(i-1))+Math.abs(z2.get(i)-z2.get(i-1)));
-//        }
-//
-//        ArrayList <Integer> movement2 = new ArrayList<Integer>();
-//        for(int i =0; i<total_difference2.size();i++)
-//        {
-//            if(total_difference2.get(i)<10000)
-//                movement2.add(0);
-//            else
-//                movement2.add(1);
-//        }
+        ArrayList<ArrayList<String>> ac_data = acdb.getAllCotacts();
+        ArrayList<Integer> x2 = new ArrayList<Integer>();
+        ArrayList<Integer> y2 = new ArrayList<Integer>();
+        ArrayList<Integer> z2 = new ArrayList<Integer>();
+        for (int i =0; i <ac_data.get(0).size(); i++)
+        {
+            x2.add(Integer.parseInt(ac_data.get(0).get(i)));
+            y2.add(Integer.parseInt(ac_data.get(1).get(i)));
+            z2.add(Integer.parseInt(ac_data.get(2).get(i)));
+        }
+        SimpleDateFormat formatter2 =new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        ArrayList<Date> time2 = new ArrayList<Date>();
+        for(String a:ac_data.get(3))
+        {
+            try{
+                time2.add(formatter2.parse(a));
+            }
+            catch(java.text.ParseException e){
+
+            }
+        }
+        ArrayList<Integer> x2_delta = new ArrayList<Integer>();
+        ArrayList<Integer> y2_delta = new ArrayList<Integer>();
+        ArrayList<Integer> z2_delta = new ArrayList<Integer>();
+
+        ArrayList<Integer> total_difference2 = new ArrayList<Integer>();
+        for(int i = 1; i< x2.size();i++)
+        {
+            x2_delta.add(x2.get(i)-x2.get(i-1));
+            y2_delta.add(y2.get(i)-y2.get(i-1));
+            z2_delta.add(z2.get(i)-z2.get(i-1));
+            total_difference2.add(Math.abs(x2.get(i)-x2.get(i-1))+Math.abs(y2.get(i)-y2.get(i-1))+Math.abs(z2.get(i)-z2.get(i-1)));
+        }
+
+        ArrayList <Integer> movement2 = new ArrayList<Integer>();
+        for(int i =0; i<total_difference2.size();i++)
+        {
+            if(total_difference2.get(i)<10000)
+                movement2.add(0);
+            else
+                movement2.add(1);
+        }
 
 
 
@@ -345,7 +354,8 @@ public class AnalysisActivity extends AppCompatActivity {
                 }
         }
 
-
+        Log.d("length of gyro", String.valueOf(time.size()));
+        Log.d("length of ac", String.valueOf(time2.size()));
 
         long sleeptime=0;
         long totaltime=0;
@@ -376,13 +386,13 @@ public class AnalysisActivity extends AppCompatActivity {
                     }
                 } else {
                     mpm.add(movement_count);
-                    Log.d("mpm else ",String.valueOf(movement_count));
+//                    Log.d("mpm else ",String.valueOf(movement_count));
                     i=j;
                     break;
                 }
         }
 
-        Log.d("mpm after for loop", "mpm size:"+String.valueOf(mpm.size()));
+//        Log.d("mpm after for loop", "mpm size:"+String.valueOf(mpm.size()));
 
 
 

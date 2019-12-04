@@ -44,7 +44,7 @@ public class AnalysisActivity extends AppCompatActivity {
     public float sleepPercent = 1;
 
 
-    public static PieChart sleepPlot;
+    public static PieChart sleep24hPlot;
 
 
 
@@ -66,7 +66,7 @@ public class AnalysisActivity extends AppCompatActivity {
 //        configureData(heartRateProPlot); // here data is empty
 
 //         LineChart breathRatePlot= (LineChart) findViewById(R.id.breath_rate);
-        PieChart sleep24hPlot  =(PieChart) findViewById(R.id.sleep_24h_piechart);
+        sleep24hPlot  =(PieChart) findViewById(R.id.sleep_24h_piechart);
         breathRatePlot= (LineChart) findViewById(R.id.breath_rate);
         movementCountPlot = (LineChart) findViewById(R.id.movement_count);
 //        BarChart sleep24hPlot = (BarChart) findViewById(R.id.sleep_24h);

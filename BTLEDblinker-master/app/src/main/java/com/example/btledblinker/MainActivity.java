@@ -1,12 +1,5 @@
 package com.example.btledblinker;
 
-import android.app.Service;
-import android.content.Intent;
-import android.os.IBinder;
-import android.view.Gravity;
-import android.widget.Toast;
-
-
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -14,18 +7,10 @@ import android.bluetooth.BluetoothSocket;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.view.Gravity;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
-import android.os.AsyncTask;
-import android.app.ProgressDialog;
-
-
-//import android.support.v4.app.ActivityCompat;
-//import android.support.v4.content.ContextCompat;
-//import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -42,10 +27,16 @@ import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Set;
 import java.util.UUID;
 
-import java.util.Date;
+
+//import android.support.v4.app.ActivityCompat;
+//import android.support.v4.content.ContextCompat;
+//import android.support.v7.app.AppCompatActivity;
+
+
 
 
 public class MainActivity extends Activity {
@@ -120,19 +111,23 @@ public class MainActivity extends Activity {
         //    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
         final char[] buffer = new char[1];
 
+//        String readMessage = null;
+//        Handler hnd = mConnectedThread.getThreadHandler();
+//        readMessage = hnd.sendMessage();
+//        mReadBuffer.setText(readMessage);
+
 
         mHandler = new Handler(){
             public void handleMessage(android.os.Message msg){
                 if(msg.what == MESSAGE_READ){
                     String readMessage = null;
                     try {
+//                        readMessage = new String((String) msg.obj);
                         readMessage = new String((byte[]) msg.obj, "UTF-8");
                     } catch (UnsupportedEncodingException e) {
                         e.printStackTrace();
                     }
                     mReadBuffer.setText(readMessage);
-
-
 
                 }
 
@@ -162,17 +157,17 @@ public class MainActivity extends Activity {
 //                    else {
 //                        mLED1.setBackgroundColor(Color.RED);
 //                    }
-                    if(mConnectedThread != null) //First check to make sure thread created
-                    {
-//                        AsyncTaskRunner task= new AsyncTaskRunner();
-                        Intent intent = new Intent(MainActivity.this, MyService.class);
-                        if(mLED1.isChecked()){
-                            startService(intent);
-                        }
-                        else
-                        {
-                            stopService(intent);
-                        }
+//                    if(mConnectedThread != null) //First check to make sure thread created
+//                    {
+////                        AsyncTaskRunner task= new AsyncTaskRunner();
+//                        Intent intent = new Intent(MainActivity.this, MyService.class);
+//                        if(mLED1.isChecked()){
+//                            startService(intent);
+//                        }
+//                        else
+//                        {
+//                            stopService(intent);
+//                        }
 //                        while (true) {
 //                            String readMessage = (String) mReadBuffer.getText();
 //                            String returnMessage = null;
@@ -225,7 +220,7 @@ public class MainActivity extends Activity {
 //                    String str = new String( buffer );
 
 
-                        }
+//                        }
 
 
             });
@@ -406,109 +401,173 @@ public class MainActivity extends Activity {
     }
 
 
-    private class AsyncTaskRunner extends AsyncTask<Void, Void, Void> {
-        String readMessage= (String) mReadBuffer.getText();
-        ProgressDialog progressDialog;
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            while(isCancelled()==false) {
-                String returnMessage = null;
-                if (readMessage.isEmpty()) {
-                    Toast toast = Toast.makeText(getApplicationContext(), "You need to enter a valid number!", Toast.LENGTH_LONG);
-                    toast.setGravity(Gravity.TOP | Gravity.LEFT, 265, 600);
-                    toast.show();
-                    return null;
-                } else {
-
-                    String[] Number = readMessage.split("\n");
-                    for (String a : Number) {
-                        a = a.trim();
-                        if (a.contains("HR")) {
-                            mydb.insertContact(Integer.valueOf(a.substring(2, a.length())), simpleDateFormat.format(date).toString());
-                        }
-                        if (a.contains("TEMP")) {
-                            tmpdb.insertContact(Double.valueOf(a.substring(4, a.length())), simpleDateFormat.format(date).toString());
-                        }
-                        if (a.contains("GY")) {
-                            String[] gy = a.split(",");
-                            gydb.insertContact(Integer.valueOf(gy[0].substring(2, gy[0].length())), Integer.valueOf(gy[1]),
-                                    Integer.valueOf(gy[2]), simpleDateFormat.format(date).toString());
-                        }
-                        if (a.contains("AC")) {
-                            String[] ac = a.split(",");
-                            acdb.insertContact(Integer.valueOf(ac[0].substring(2, ac[0].length())), Integer.valueOf(ac[1]),
-                                    Integer.valueOf(ac[2]), simpleDateFormat.format(date).toString());
-                        }
-                    }
-
-                }
-                if (isCancelled()) break;
-            }
-            return null;
-        }
-    }
+//    private class AsyncTaskRunner extends AsyncTask<Void, Void, Void> {
+//        String readMessage= (String) mReadBuffer.getText();
+//        ProgressDialog progressDialog;
 //
-//    public class ConnectedThread extends Thread {
-//        private final BluetoothSocket mmSocket;
-//        private final InputStream mmInStream;
-//        private final OutputStream mmOutStream;
+//        @Override
+//        protected Void doInBackground(Void... params) {
+//            while(isCancelled()==false) {
+//                String returnMessage = null;
+//                if (readMessage.isEmpty()) {
+//                    Toast toast = Toast.makeText(getApplicationContext(), "You need to enter a valid number!", Toast.LENGTH_LONG);
+//                    toast.setGravity(Gravity.TOP | Gravity.LEFT, 265, 600);
+//                    toast.show();
+//                    return null;
+//                } else {
 //
-//        public ConnectedThread(BluetoothSocket socket) {
-//            mmSocket = socket;
-//            InputStream tmpIn = null;
-//            OutputStream tmpOut = null;
-//
-//            // Get the input and output streams, using temp objects because
-//            // member streams are final
-//            try {
-//                tmpIn = socket.getInputStream();
-//                tmpOut = socket.getOutputStream();
-//            } catch (IOException e) { }
-//
-//            mmInStream = tmpIn;
-//            mmOutStream = tmpOut;
-//        }
-//
-//        public void run() {
-//            byte[] buffer = new byte[1024];  // buffer store for the stream
-//            int bytes; // bytes returned from read()
-//            // Keep listening to the InputStream until an exception occurs
-//            while (true) {
-//                try {
-//                    // Read from the InputStream
-//                    bytes = mmInStream.available();
-//                    if(bytes != 0) {
-//                        buffer = new byte[10240];
-//                        SystemClock.sleep(200); //pause and wait for rest of data. Adjust this depending on your sending speed.
-//                        bytes = mmInStream.available(); // how many bytes are ready to be read?
-//                        bytes = mmInStream.read(buffer, 0, bytes); // record how many bytes we actually read
-//                        mHandler.obtainMessage(MESSAGE_READ, bytes, -1, buffer)
-//                                .sendToTarget(); // Send the obtained bytes to the UI activity
+//                    String[] Number = readMessage.split("\n");
+//                    for (String a : Number) {
+//                        a = a.trim();
+//                        if (a.contains("HR")) {
+//                            mydb.insertContact(Integer.valueOf(a.substring(2, a.length())), simpleDateFormat.format(date).toString());
+//                        }
+//                        if (a.contains("TEMP")) {
+//                            tmpdb.insertContact(Double.valueOf(a.substring(4, a.length())), simpleDateFormat.format(date).toString());
+//                        }
+//                        if (a.contains("GY")) {
+//                            String[] gy = a.split(",");
+//                            gydb.insertContact(Integer.valueOf(gy[0].substring(2, gy[0].length())), Integer.valueOf(gy[1]),
+//                                    Integer.valueOf(gy[2]), simpleDateFormat.format(date).toString());
+//                        }
+//                        if (a.contains("AC")) {
+//                            String[] ac = a.split(",");
+//                            acdb.insertContact(Integer.valueOf(ac[0].substring(2, ac[0].length())), Integer.valueOf(ac[1]),
+//                                    Integer.valueOf(ac[2]), simpleDateFormat.format(date).toString());
+//                        }
 //                    }
-//                } catch (IOException e) {
-//                    e.printStackTrace();
 //
-//                    break;
 //                }
+//                if (isCancelled()) break;
 //            }
-//        }
-//
-//        /* Call this from the main activity to send data to the remote device */
-//        public void write(String input) {
-//            byte[] bytes = input.getBytes();           //converts entered String into bytes
-//            try {
-//                mmOutStream.write(bytes);
-//            } catch (IOException e) { }
-//        }
-//
-//        /* Call this from the main activity to shutdown the connection */
-//        public void cancel() {
-//            try {
-//                mmSocket.close();
-//            } catch (IOException e) { }
+//            return null;
 //        }
 //    }
+//
+    public class ConnectedThread extends Thread {
+        private final BluetoothSocket mmSocket;
+        private final InputStream mmInStream;
+        private final OutputStream mmOutStream;
 
+        public ConnectedThread(BluetoothSocket socket) {
+            mmSocket = socket;
+            InputStream tmpIn = null;
+            OutputStream tmpOut = null;
+
+            // Get the input and output streams, using temp objects because
+            // member streams are final
+            try {
+                tmpIn = socket.getInputStream();
+                tmpOut = socket.getOutputStream();
+            } catch (IOException e) { }
+
+            mmInStream = tmpIn;
+            mmOutStream = tmpOut;
+        }
+
+        public void run() {
+            byte[] buffer = new byte[1024];  // buffer store for the stream
+            int bytes; // bytes returned from read()
+            // Keep listening to the InputStream until an exception occurs
+            while (true) {
+                try {
+                    // Read from the InputStream
+                    bytes = mmInStream.available();
+                    if(bytes != 0) {
+                        buffer = new byte[10240];
+                        SystemClock.sleep(200); //pause and wait for rest of data. Adjust this depending on your sending speed.
+                        bytes = mmInStream.available(); // how many bytes are ready to be read?
+                        bytes = mmInStream.read(buffer, 0, bytes); // record how many bytes we actually read
+
+                        String storedmessage = new String((byte[]) buffer, "UTF-8");
+//                        String storedmessage = convertStreamToString(mmInStream);
+//                        mReadBuffer.setText(storedmessage);
+//                        mHandler.obtainMessage(MESSAGE_READ,storedmessage).sendToTarget();
+                        mHandler.obtainMessage(MESSAGE_READ, bytes, -1, buffer)
+                                .sendToTarget(); // Send the obtained bytes to the UI activity
+
+                        if (storedmessage.isEmpty()) {
+                            Toast toast = Toast.makeText(getApplicationContext(), "You need to enter a valid number!", Toast.LENGTH_LONG);
+//                            toast.setGravity(Gravity.TOP | Gravity.LEFT, 265, 600);
+                            toast.show();
+                            return;
+                        } else {
+
+                            String[] Number = storedmessage.split("\n");
+                            for (String a : Number) {
+                                a = a.trim();
+                                if (a.contains("HR")) {
+                                    Date date = new Date(System.currentTimeMillis());
+                                    mydb.insertContact(Integer.valueOf(a.substring(2, a.length())), simpleDateFormat.format(date).toString());
+                                }
+                                if (a.contains("TEMP")) {
+                                    Date date = new Date(System.currentTimeMillis());
+                                    tmpdb.insertContact(Double.valueOf(a.substring(4, a.length())), simpleDateFormat.format(date).toString());
+                                }
+                                if (a.contains("GY")) {
+                                    Date date = new Date(System.currentTimeMillis());
+                                    String[] gy = a.split(",");
+                                    try
+                                    {
+                                        gydb.insertContact(Integer.valueOf(gy[0].substring(2, gy[0].length())), Integer.valueOf(gy[1]),
+                                                Integer.valueOf(gy[2]), simpleDateFormat.format(date).toString());
+                                    }
+                                    catch(ArrayIndexOutOfBoundsException e)
+                                    {
+                                        Log.d("gyoutofbounds",simpleDateFormat.format(date).toString());
+                                    }
+                                }
+                                if (a.contains("AC")) {
+                                    Date date = new Date(System.currentTimeMillis());
+                                    String[] ac = a.split(",");
+                                    try
+                                    {
+                                        acdb.insertContact(Integer.valueOf(ac[0].substring(2, ac[0].length())), Integer.valueOf(ac[1]),
+                                                Integer.valueOf(ac[2]), simpleDateFormat.format(date).toString());
+                                    }
+                                    catch(ArrayIndexOutOfBoundsException e)
+                                    {
+                                        Log.d("acoutofbounds",simpleDateFormat.format(date).toString());
+                                    }
+                                }
+                            }
+
+                        }
+
+
+
+
+
+
+
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+
+                    break;
+                }
+            }
+        }
+
+        /* Call this from the main activity to send data to the remote device */
+        public void write(String input) {
+            byte[] bytes = input.getBytes();           //converts entered String into bytes
+            try {
+                mmOutStream.write(bytes);
+            } catch (IOException e) { }
+        }
+
+        /* Call this from the main activity to shutdown the connection */
+        public void cancel() {
+            try {
+                mmSocket.close();
+            } catch (IOException e) { }
+        }
+    }
+
+    static String convertStreamToString(java.io.InputStream is) {
+        java.util.Scanner s = new java.util.Scanner(is, "UTF-8").useDelimiter("\\A");
+        return s.hasNext() ? s.next() : "";
+    }
 }
 

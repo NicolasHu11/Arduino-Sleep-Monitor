@@ -2,7 +2,32 @@ package com.example.btledblinker;
 
 import android.bluetooth.BluetoothSocket;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.SystemClock;
+import android.widget.TextView;
+import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.ToggleButton;
+
+import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+import android.os.Handler;
+import android.os.Message;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
+
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,6 +42,7 @@ public class ConnectedThread extends Thread {
     private final static int CONNECTING_STATUS = 3; // used in bluetooth handler to identify message status
     private final InputStream mmInStream;
     private final OutputStream mmOutStream;
+
 
     public ConnectedThread(BluetoothSocket socket) {
         mmSocket = socket;
@@ -36,6 +62,7 @@ public class ConnectedThread extends Thread {
 
     @Override
     public void run() {
+        Looper.prepare();
         mHandler = new Handler(){
             public void handleMessage(android.os.Message msg){
                 if(msg.what == MESSAGE_READ){
@@ -45,20 +72,22 @@ public class ConnectedThread extends Thread {
                     } catch (UnsupportedEncodingException e) {
                         e.printStackTrace();
                     }
-                    mReadBuffer.setText(readMessage);
+
+//                    mReadBuffer.setText(readMessage);
 
 
 
                 }
 
                 if(msg.what == CONNECTING_STATUS){
-                    if(msg.arg1 == 1)
-                        mBluetoothStatus.setText("Connected to Device: " + (String)(msg.obj));
-                    else
-                        mBluetoothStatus.setText("Connection Failed");
+//                    if(msg.arg1 == 1)
+//                        mBluetoothStatus.setText("Connected to Device: " + (String)(msg.obj));
+//                    else
+//                        mBluetoothStatus.setText("Connection Failed");
                 }
             }
         };
+        Looper.loop();
         byte[] buffer = new byte[1024];  // buffer store for the stream
         int bytes; // bytes returned from read()
         // Keep listening to the InputStream until an exception occurs

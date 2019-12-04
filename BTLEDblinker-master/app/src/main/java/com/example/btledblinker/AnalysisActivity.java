@@ -11,12 +11,18 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -31,6 +37,11 @@ public class AnalysisActivity extends AppCompatActivity {
     private Button bluetooth_activity;
     private TextView mSleeptimeBuffer;
     private TextView mTotaltimeBuffer;
+    public float sleepPercent = 1;
+
+
+    public static PieChart sleepPlot;
+
 
 
 
@@ -51,14 +62,10 @@ public class AnalysisActivity extends AppCompatActivity {
 //        configureData(heartRateProPlot); // here data is empty
 
         LineChart breathRatePlot= (LineChart) findViewById(R.id.breath_rate);
-
-
+        PieChart sleep24hPlot  =(PieChart) findViewById(R.id.sleep_24h_piechart);
         movementCountPlot = (LineChart) findViewById(R.id.movement_count);
-
-
-        BarChart sleep24hPlot = (BarChart) findViewById(R.id.sleep_24h);
-
-        BarChart sleepWeekPlot = (BarChart) findViewById(R.id.sleep_week);
+//        BarChart sleep24hPlot = (BarChart) findViewById(R.id.sleep_24h);
+//        BarChart sleepWeekPlot = (BarChart) findViewById(R.id.sleep_week);
 
         processMovement();
 
@@ -80,7 +87,30 @@ public class AnalysisActivity extends AppCompatActivity {
         // 3. display data on the Analysis screen
 
 
+        // ==================================================================
+        // this is for pie plot
+        Description pieDesc = new Description();
+        pieDesc.setText("pie chart for sleep ");
+        pieDesc.setTextSize(20f);
+        sleep24hPlot.setDescription(pieDesc);
 
+        sleep24hPlot.setHoleRadius(30f);
+        sleep24hPlot.setTransparentCircleRadius(30f);
+
+        sleep24hPlot.setUsePercentValues(true);
+        List<PieEntry> pieValue = new ArrayList<>();
+        pieValue.add(new PieEntry(sleepPercent, "sleep"));
+        pieValue.add(new PieEntry(1-sleepPercent, "awake"));
+
+        PieDataSet pieDataSet = new PieDataSet(pieValue, "");
+        PieData pieData = new PieData(pieDataSet);
+        sleep24hPlot.setData(pieData);
+
+        pieDataSet.setColors(ColorTemplate.JOYFUL_COLORS);
+        sleep24hPlot.animateXY(1400,1400);
+        sleep24hPlot.invalidate(); // refresh
+        // end of pit plot
+        // ==================================================================
 
     }
 
@@ -170,6 +200,8 @@ public class AnalysisActivity extends AppCompatActivity {
         mSleeptimeBuffer.setText(String.valueOf(sleeptime));
         mTotaltimeBuffer.setText(String.valueOf(totaltime));
 
+        sleepPercent = (float)sleeptime/(float)totaltime; // update the sleep percent
+        Log.d("after sleep time,", "sleep Percent is" + String.valueOf(sleepPercent));
 
         ArrayList<Integer> mpm = new ArrayList<Integer>();
 
@@ -177,7 +209,7 @@ public class AnalysisActivity extends AppCompatActivity {
         for(int i =0; i<time.size()-1;i++) {
             movement_count=0;
             for (int j = i; j < time.size() - 1; j++)
-                if (calculatetimediff(time.get(j), time.get(i)) < 60) {
+                if (calculatetimediff(time.get(j), time.get(i)) < 5) {
                     if (movement.get(j) == 1) {
                         movement_count=movement_count+1;
                     }
@@ -188,7 +220,7 @@ public class AnalysisActivity extends AppCompatActivity {
                 }
         }
 
-        Log.d("mpm after for loop",String.valueOf(mpm.size()));
+        Log.d("mpm after for loop", "mpm size:"+String.valueOf(mpm.size()));
 
 
 

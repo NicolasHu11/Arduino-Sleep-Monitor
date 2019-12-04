@@ -116,7 +116,7 @@ public class SignalActivity extends AppCompatActivity {
         gyroEntries.add(accEntriesY);
         gyroEntries.add(accEntriesZ);
 
-        ArrayList<ILineDataSet> gyroDataSet = constructGyroDataSet(gyroEntries, accChart,"accelerometer");
+        ArrayList<ILineDataSet> gyroDataSet = constructGyroDataSet(gyroEntries, accChart,"Gyroscope");
 
         constructLineData(gyroDataSet, gyroChart);
 

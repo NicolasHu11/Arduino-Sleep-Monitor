@@ -6,7 +6,7 @@ SoftwareSerial BTSerial(10, 11); // RX | TX
 #include <DFRobot_Heartrate.h>
 #include "DFRobot_Heartrate.h"
 #define heartratePin A1
-DFRobot_Heartrate heartrate(ANALOG_MODE); ///< ANALOG_MODE or DIGITAL_MODE
+DFRobot_Heartrate heartrate(DIGITAL_MODE); ///< ANALOG_MODE or DIGITAL_MODE
 
 // gyroscope 
 #include<Wire.h>
@@ -19,12 +19,14 @@ int16_t AcX,AcY,AcZ,Tmp,GyX,GyY,GyZ;
 #define ONE_WIRE_BUS 3 // Data wire is plugged into pin 3 on the Arduino
 OneWire oneWire(ONE_WIRE_BUS); // Setup a oneWire instance to communicate with any OneWire devices
 DallasTemperature sensors(&oneWire); // Pass our oneWire reference to Dallas Temperature.
-int tempResolution = 10;
-DeviceAddress insideThermometer = { 0x28, 0xFF, 0x4E, 0xC8, 0x7A, 0x18, 0x01, 0x67 }; // this needs to be found by another sketch.
+
+int tempResolution = 10; // bits, this affects query time and resolution. 
+DeviceAddress insideThermometer = { 0x28, 0xFF, 0x9F, 0x4D, 0x7B, 0x18, 0x01, 0x07 }; // this needs to be found by another sketch.
 
 // ==============================
 String serial_string = "";
 int delay_count = 0;
+int number = 0;
 
 
 // ======================
@@ -50,22 +52,33 @@ void setup() {
 void loop() {
 
   HeartRateSensor();
+//  serial_string += "HR" +String(number) + "\n\r";
   delay(20);
   delay_count += 1; 
+//  number += 1;
 
   if (delay_count == 5) {
-    //100ms  
+    //100ms = 20ms * 5
     TempSensor();
+//  serial_string += "TEMP" +String(number)+ ".00" +"\n\r" ;
+
     }
   else if (delay_count == 10) {
-    // 200ms 
+    // 200ms = 20ms * 10
     TempSensor();
+//    serial_string += "TEMP" +String(number)+ ".00""\n\r" ;
     GyroscopeSensor();
+//  serial_string += "AC" + String(number) + "," + String(number+50) + "," + String(number+100) + "\n\r";
+//  serial_string += "GY" + String(number) + "," + String(number+50) + "," + String(number+100) + "\n\r";
     Serial.println(serial_string);
     writeString(serial_string);
     serial_string = ""; 
     delay_count = 0; // reset the count 
     }
+//    else if (number >= 1000){
+//      delay_count = 50;
+//      serial_string = "";
+//      }
   
   // Arduino to BT, input on the serial monitor 
   if (Serial.available()>0)
@@ -75,12 +88,17 @@ void loop() {
 
 void HeartRateSensor() {
   // heart rate sensor 
+  
   // digital mode 
-//  uint8_t rateValue;
-//  heartrate.getValue(heartratePin); ///< A1 foot sampled values
-//  rateValue = heartrate.getRate(); ///< Get heart rate value 
+  uint8_t rateValue;
+  heartrate.getValue(heartratePin); ///< A1 foot sampled values
+  rateValue = heartrate.getRate(); ///< Get heart rate value 
+  // digital end 
+  
   // analog mode 
-  int rateValue = analogRead(heartratePin); 
+//  int rateValue = analogRead(heartratePin); 
+  // analog end 
+  
   if(rateValue)  {
     Serial.println(rateValue);
     serial_string += "HR" + String(rateValue) + "\n\r";
@@ -100,17 +118,17 @@ Wire.beginTransmission(MPU);
   GyY=Wire.read()<<8|Wire.read();  
   GyZ=Wire.read()<<8|Wire.read();  
 
-  Serial.print("Accelerometer: ");
-  Serial.print("X = "); Serial.print(AcX);
-  Serial.print(" | Y = "); Serial.print(AcY);
-  Serial.print(" | Z = "); Serial.println(AcZ); 
+//  Serial.print("Accelerometer: ");
+//  Serial.print("X = "); Serial.print(AcX);
+//  Serial.print(" | Y = "); Serial.print(AcY);
+//  Serial.print(" | Z = "); Serial.println(AcZ); 
   serial_string += "AC" + String(AcX) + "," + String(AcY) + "," + String(AcZ) + "\n\r";
  
-  Serial.print("Gyroscope: ");
-  Serial.print("X = "); Serial.print(GyX);
-  Serial.print(" | Y = "); Serial.print(GyY);
-  Serial.print(" | Z = "); Serial.println(GyZ);
-  Serial.println(" ");
+//  Serial.print("Gyroscope: ");
+//  Serial.print("X = "); Serial.print(GyX);
+//  Serial.print(" | Y = "); Serial.print(GyY);
+//  Serial.print(" | Z = "); Serial.println(GyZ);
+//  Serial.println(" ");
   serial_string += "GY" + String(GyX) + "," + String(GyY) + "," + String(GyZ) + "\n\r";
   // delay(200);
 
@@ -120,9 +138,9 @@ Wire.beginTransmission(MPU);
 void TempSensor(){ 
   // print temperature
   //delay(2000);
-  Serial.print("Getting temperatures...\n\r");
+//  Serial.print("Getting temperatures...\n\r");
   sensors.requestTemperatures();
-  Serial.print("Inside temperature is: ");
+//  Serial.print("Inside temperature is: ");
   printTemperature(insideThermometer);
   Serial.print("\n\r"); 
 }
@@ -135,11 +153,11 @@ void printTemperature(DeviceAddress deviceAddress){
     Serial.print("Error getting temperature"); 
     } 
   else { 
-    Serial.print("C: "); 
+//    Serial.print("C: "); 
     Serial.print(tempC); 
     serial_string += "TEMP" + String(tempC) + "\n\r";
-    Serial.print(" F: ");
-    Serial.print(DallasTemperature::toFahrenheit(tempC));
+//    Serial.print(" F: ");
+//    Serial.print(DallasTemperature::toFahrenheit(tempC));
     }
 }
 

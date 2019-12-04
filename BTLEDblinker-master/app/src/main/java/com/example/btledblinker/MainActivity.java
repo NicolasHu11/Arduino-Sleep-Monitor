@@ -19,7 +19,6 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.ToggleButton;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -56,7 +55,8 @@ public class MainActivity extends Activity {
     private Set<BluetoothDevice> mPairedDevices;
     private ArrayAdapter<String> mBTArrayAdapter;
     private ListView mDevicesListView;
-    private ToggleButton mLED1;
+    private Button mLED1;
+    private Button Signal_activity;
 
     private final String TAG = MainActivity.class.getSimpleName();
     private Handler mHandler; // Our main handler that will receive callback notifications
@@ -97,7 +97,8 @@ public class MainActivity extends Activity {
         mOffBtn = (Button)findViewById(R.id.off);
         mDiscoverBtn = (Button)findViewById(R.id.discover);
         mListPairedDevicesBtn = (Button)findViewById(R.id.PairedBtn);
-        mLED1 = (ToggleButton) findViewById(R.id.checkboxLED1);
+        mLED1 = (Button) findViewById(R.id.checkboxLED1);
+        Signal_activity = (Button) findViewById(R.id.Activitybutton1);
 
         mBTArrayAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1);
         mBTAdapter = BluetoothAdapter.getDefaultAdapter(); // get a handle on the bluetooth radio
@@ -150,6 +151,7 @@ public class MainActivity extends Activity {
             mLED1.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View v){
+                    launch_AnalysisActivity();
 
 //                    if (mLED1.isChecked()==false) {
 //                        mLED1.setBackgroundColor(Color.GREEN);
@@ -224,6 +226,13 @@ public class MainActivity extends Activity {
 
 
             });
+
+            Signal_activity.setOnClickListener(new View.OnClickListener() {
+                                         @Override
+                                         public void onClick(View v) {
+                                             launch_SignalActivity();
+                                         }
+                                     });
 
 
             mScanBtn.setOnClickListener(new View.OnClickListener() {
@@ -568,6 +577,17 @@ public class MainActivity extends Activity {
     static String convertStreamToString(java.io.InputStream is) {
         java.util.Scanner s = new java.util.Scanner(is, "UTF-8").useDelimiter("\\A");
         return s.hasNext() ? s.next() : "";
+    }
+
+    private void launch_AnalysisActivity()
+    {
+        Intent intent1 = new Intent(this, AnalysisActivity.class);
+        startActivity(intent1);
+    }
+    private void launch_SignalActivity()
+    {
+        Intent intent2 = new Intent(this, SignalActivity.class);
+        startActivity(intent2);
     }
 }
 

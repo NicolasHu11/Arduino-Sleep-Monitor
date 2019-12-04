@@ -8,20 +8,22 @@
 
 
     <LinearLayout
-        android:orientation="vertical"
+        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    <Button
-        android:id="@+id/Bluetooth1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="400dp"
-        android:layout_marginTop="0dp"
-        android:checked="false"
-        android:scaleX="1"
-        android:scaleY="1"
-        android:text="Bluetooth"
-        android:textStyle="bold" />
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/Bluetooth1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="400dp"
+            android:layout_marginTop="0dp"
+            android:checked="false"
+            android:scaleX="1"
+            android:scaleY="1"
+            android:text="Bluetooth"
+            android:textStyle="bold" />
     </LinearLayout>
     <TextView
         android:id="@+id/textView4"
@@ -33,45 +35,6 @@
         android:text="@string/processed_signals_24h_text_view"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-
-    <TextView
-        android:id="@+id/textView5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="600dp"
-        android:text="Sleeptime"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-    <TextView
-        android:id="@+id/textViewsleep"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="106dp"
-        android:layout_marginTop="600dp"
-        android:text="&lt;sleeptime>"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-    <TextView
-        android:id="@+id/textView6"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="640dp"
-        android:text="Totaltime"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-    <TextView
-        android:id="@+id/textViewtotal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="106dp"
-        android:layout_marginTop="640dp"
-        android:text="&lt;totaltime>"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
 
 
     <com.github.mikephil.charting.charts.LineChart
@@ -113,23 +76,71 @@
         app:layout_constraintTop_toBottomOf="@+id/movement_count" />
 
     // ref on stacked bar plot: https://www.youtube.com/watch?v=jTYi0Q7lLco
-    <com.github.mikephil.charting.charts.HorizontalBarChart
-        android:id="@+id/sleep_24h"
-        android:layout_width="match_parent"
-        android:layout_height="40sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView7" />
 
-    <com.github.mikephil.charting.charts.BarChart
-        android:id="@+id/sleep_week"
+    <com.github.mikephil.charting.charts.PieChart
+        android:id="@+id/sleep_24h_piechart"
         android:layout_width="match_parent"
-        android:layout_height="300sp"
+        android:layout_height="300dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/sleep_24h" />
+        app:layout_constraintTop_toBottomOf="@+id/textView7" >
+
+    </com.github.mikephil.charting.charts.PieChart>
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="Sleeptime"
+        app:layout_constraintStart_toStartOf="@id/sleep_24h_piechart"
+        app:layout_constraintTop_toBottomOf="@id/sleep_24h_piechart"
+        app:layout_goneMarginStart="16dp" />
+
+    <TextView
+        android:id="@+id/textViewsleep"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:text="&lt;sleeptime>"
+        app:layout_constraintStart_toEndOf="@+id/textView5"
+        app:layout_constraintTop_toBottomOf="@+id/sleep_24h_piechart" />
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Totaltime"
+        app:layout_constraintStart_toStartOf="@id/textView5"
+        app:layout_constraintTop_toBottomOf="@id/textView5" />
+
+    <TextView
+        android:id="@+id/textViewtotal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:text="&lt;totaltime>"
+        app:layout_constraintStart_toEndOf="@id/textView6"
+        app:layout_constraintTop_toBottomOf="@id/textViewsleep" />
+
+    <!--    <com.github.mikephil.charting.charts.BarChart-->
+<!--        android:id="@+id/sleep_24h"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="40sp"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintHorizontal_bias="0.0"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/textView7" />-->
+
+<!--    <com.github.mikephil.charting.charts.BarChart-->
+<!--        android:id="@+id/sleep_week"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="300sp"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintHorizontal_bias="0.0"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/sleep_24h" />-->
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

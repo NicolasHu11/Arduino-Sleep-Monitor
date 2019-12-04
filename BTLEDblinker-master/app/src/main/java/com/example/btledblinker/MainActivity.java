@@ -33,6 +33,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import static com.example.btledblinker.SignalActivity.hrChart;
+import static com.example.btledblinker.SignalActivity.tempChart;
 
 
 //import android.support.v4.app.ActivityCompat;
@@ -524,6 +525,11 @@ public class MainActivity extends Activity {
                                 if (a.contains("TEMP")) {
                                     Date date = new Date(System.currentTimeMillis());
                                     tmpdb.insertContact(Double.valueOf(a.substring(4, a.length())), simpleDateFormat.format(date).toString());
+                                    try {
+                                        SignalActivity.addEntry(tempChart,"temp", Float.valueOf(a.substring(4, a.length())));
+                                    } catch (Exception e) {
+                                        Log.d("BT thread", "update HR chart, error :" + e.toString());
+                                    }
                                 }
                                 if (a.contains("GY")) {
                                     Date date = new Date(System.currentTimeMillis());

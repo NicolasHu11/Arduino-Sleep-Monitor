@@ -11,24 +11,27 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <Button
             android:id="@+id/Bluetooth1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="250dp"
+            android:layout_marginLeft="400dp"
             android:layout_marginTop="0dp"
             android:checked="false"
-            android:scaleX="1.5"
-            android:scaleY="1.5"
+            android:scaleX="1"
+            android:scaleY="1"
             android:text="Bluetooth"
             android:textStyle="bold" />
     </LinearLayout>
+
     <TextView
         android:id="@+id/textView"
         android:layout_width="0dp"
-        android:layout_height="30dp"
+        android:layout_height="50dp"
         android:layout_weight="0.1"
         android:ellipsize="end"
+        android:gravity="center_vertical"
         android:maxLines="1"
         android:text="@string/heart_rate_text_view"
         android:textStyle="bold"

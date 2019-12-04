@@ -20,6 +20,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.mikephil.charting.data.Entry;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -29,6 +31,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Set;
 import java.util.UUID;
+
+import static com.example.btledblinker.SignalActivity.hrChart;
 
 
 //import android.support.v4.app.ActivityCompat;
@@ -74,10 +78,10 @@ public class MainActivity extends Activity {
 
     public final static String EXTRA_MESSAGE = "MESSAGE";
     private ListView obj;
-    DBHelper mydb;
-    TEMPHelper tmpdb;
-    GyroHelper gydb;
-    ACHelper acdb;
+    static DBHelper mydb;
+    static TEMPHelper tmpdb;
+    static GyroHelper gydb;
+    static ACHelper acdb;
 
 
 
@@ -508,6 +512,14 @@ public class MainActivity extends Activity {
                                 if (a.contains("HR")) {
                                     Date date = new Date(System.currentTimeMillis());
                                     mydb.insertContact(Integer.valueOf(a.substring(2, a.length())), simpleDateFormat.format(date).toString());
+                                    // here we update the plot
+                                    try {
+                                        SignalActivity.addEntry(hrChart,"hr",Integer.valueOf(a.substring(2, a.length())) );
+                                    } catch (Exception e) {
+                                        Log.d("BT thread", "update HR chart, error :" + e.toString());
+                                    }
+
+
                                 }
                                 if (a.contains("TEMP")) {
                                     Date date = new Date(System.currentTimeMillis());

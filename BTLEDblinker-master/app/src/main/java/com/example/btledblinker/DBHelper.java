@@ -63,7 +63,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
         //hp = new HashMap();
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res =  db.rawQuery( "select * from heart_rate_data", null );
+        Cursor res =  db.rawQuery( "select heartrate from heart_rate_data", null );
         res.moveToFirst();
 
         while(res.isAfterLast() == false){

@@ -1,6 +1,7 @@
 package com.example.btledblinker;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -60,11 +61,10 @@ public class SignalActivity extends AppCompatActivity {
         hrChart = (LineChart) findViewById(R.id.heart_rate_signal);
         configurePlotBasic(hrChart, "Heart Rate Signal");
         configureLegendsAndAxes(hrChart);
-//        configureData(hrChart); // here data is empty
 
         // four steps for constructing data
         ArrayList<ArrayList<String>> hrDataDB = getDataFromHRDB();
-        List<Entry> hrEntries = constructEntries(hrDataDB);
+        List<Entry> hrEntries = constructEntries(hrDataDB.get(0));
         LineDataSet hrDataSet = constructHRDataSet(hrEntries, hrChart,"heart rate");
         constructLineData(hrDataSet, hrChart);
 
@@ -75,7 +75,7 @@ public class SignalActivity extends AppCompatActivity {
         configureLegendsAndAxes(tempChart);
 
         ArrayList<ArrayList<String>> tempDataDB = getDataFromTempDB();
-        List<Entry> tempEntries = constructEntries(tempDataDB);
+        List<Entry> tempEntries = constructEntries(tempDataDB.get(0));
         LineDataSet tempDataSet = constructHRDataSet(tempEntries, tempChart,"temperature");
         constructLineData(tempDataSet, tempChart);
 
@@ -83,12 +83,20 @@ public class SignalActivity extends AppCompatActivity {
         // ==========================================================================
         // Accelerometer plot
         accChart = (LineChart) findViewById(R.id.Acc_signal);
-        configurePlotBasic(accChart, "Temperature Signal");
+        configurePlotBasic(accChart, "Accelerometer Signal");
         configureLegendsAndAxes(accChart);
 
         ArrayList<ArrayList<String>> accDataDB = getDataFromAccDB();
-        List<Entry> accEntries = constructEntries(accDataDB);
-        LineDataSet accDataSet = constructHRDataSet(accEntries, accChart,"accelerometer");
+        ArrayList<Entry> accEntriesX = constructEntries(accDataDB.get(0));
+        ArrayList<Entry> accEntriesY = constructEntries(accDataDB.get(1));
+        ArrayList<Entry> accEntriesZ = constructEntries(accDataDB.get(2));
+
+        ArrayList<ArrayList<Entry>> accEntries = new ArrayList<ArrayList<Entry>>();
+        accEntries.add(accEntriesX);
+        accEntries.add(accEntriesY);
+        accEntries.add(accEntriesZ);
+
+        ArrayList<ILineDataSet> accDataSet = constructGyroDataSet(accEntries, accChart,"accelerometer");
         constructLineData(accDataSet, accChart);
 
         // ==========================================================================
@@ -99,10 +107,18 @@ public class SignalActivity extends AppCompatActivity {
 //        configureData(gyroChart); // here data is empty
 
         ArrayList<ArrayList<String>> gyroDataDB = getDataFromGyroDB();
-        List<Entry> gyroEntries = constructEntries(gyroDataDB);
-        LineDataSet gyroDataSet = constructHRDataSet(gyroEntries, gyroChart,"gyroscope");
-        constructLineData(accDataSet, accChart);
+        ArrayList<Entry> gyroEntriesX = constructEntries(gyroDataDB.get(0));
+        ArrayList<Entry> gyroEntriesY = constructEntries(gyroDataDB.get(1));
+        ArrayList<Entry> gyroEntriesZ = constructEntries(gyroDataDB.get(2));
 
+        ArrayList<ArrayList<Entry>> gyroEntries = new ArrayList<ArrayList<Entry>>();
+        gyroEntries.add(accEntriesX);
+        gyroEntries.add(accEntriesY);
+        gyroEntries.add(accEntriesZ);
+
+        ArrayList<ILineDataSet> gyroDataSet = constructGyroDataSet(gyroEntries, accChart,"accelerometer");
+
+        constructLineData(gyroDataSet, gyroChart);
 
 
     }
@@ -239,17 +255,11 @@ public class SignalActivity extends AppCompatActivity {
 
 
     // 2. construct entries using this data
-    private  List<Entry> constructEntries(ArrayList<ArrayList<String>> data){
-        List<Entry> entries = new ArrayList<Entry>();
+    private  ArrayList<Entry> constructEntries(ArrayList<String> data){
+        ArrayList<Entry> entries = new ArrayList<Entry>();
         Integer i = 0;
 
-        // this is for multiple lines
-//        for (ArrayList<String> thisArray : data) {
-//
-//
-//        }
-
-        for (String thisData : data.get(0)) {
+        for (String thisData : data) {
             // turn your data into Entry objects
             Integer x =  i; i++;
             Integer y = 0;
@@ -265,15 +275,41 @@ public class SignalActivity extends AppCompatActivity {
         return entries;
     }
 
+    //    private  List<Entry> constructEntries(ArrayList<String> data){
+//        List<Entry> entries = new ArrayList<Entry>();
+//        Integer i = 0;
+//
+//        for (String thisData : data) {
+//            // turn your data into Entry objects
+//            Integer x =  i; i++;
+//            Integer y = 0;
+//            try {
+//                y = Integer.parseInt(thisData);
+//            } catch (Exception e ){
+//                Log.d("Real Time data from DB", "Wrong Data");
+//            }
+//            entries.add(new Entry(x, y));
+//
+//        };
+//        Log.d("entries from DB data", entries.toString());
+//        return entries;
+//    }
+
+
+
     // 3. construct data set, using  entries, set up the data set style as well.
     // initialize dataset, if there's no data in the plot
-    private static LineDataSet createSet(String dataSetLabel) {
+    private static LineDataSet createSet(String dataSetLabel, int colorId) {
 
         LineDataSet set = new LineDataSet(null, dataSetLabel); //"Dynamic Data"
         // configure dataset display info
         set.setAxisDependency(YAxis.AxisDependency.LEFT);
         set.setLineWidth(3f);
-        set.setColor(Color.MAGENTA);
+        // need to set color
+//        set.setColor(Color.MAGENTA);
+        set.setColor(colorId);
+
+
         set.setHighlightEnabled(false);
         set.setDrawValues(false);
         set.setDrawCircles(false);
@@ -285,11 +321,39 @@ public class SignalActivity extends AppCompatActivity {
     }
 
     private LineDataSet constructHRDataSet(List<Entry> data, LineChart thisPlot, String label){
-        LineDataSet dataSet = createSet(label);
+        int colorID = Color.RED;
+        if (thisPlot == tempChart) {
+            colorID = Color.GREEN;
+        }
+        LineDataSet dataSet = createSet(label, colorID);
         for (Entry thisEntry : data) {
             dataSet.addEntry(thisEntry);
         }
         return dataSet;
+    }
+    // this is for GYRO/ACC data set construction
+    private ArrayList<ILineDataSet> constructGyroDataSet(ArrayList<ArrayList<Entry>> data, LineChart thisPlot, String label){
+
+        ArrayList<ILineDataSet> dataSets = new ArrayList<>();
+
+        Integer i = 0;
+        int colorID = Color.RED;
+
+
+        for (List<Entry> thisList : data){
+            if (i == 1){
+                colorID = Color.YELLOW;
+            } else if (i == 2) {
+                colorID = Color.BLUE;
+            }
+            LineDataSet dataSet = createSet(label, colorID);
+            for (Entry thisEntry : thisList) {
+                dataSet.addEntry(thisEntry);
+            }
+            dataSets.add(dataSet);
+            i++;
+        }
+        return dataSets;
     }
 
     // 4. construct Line Data using the dataset, here we display the data.
@@ -306,16 +370,33 @@ public class SignalActivity extends AppCompatActivity {
 
     }
 
+    private void constructLineData(ArrayList<ILineDataSet> dataSet, LineChart thisPlot){
+        LineData lineData = new LineData(dataSet);
+        thisPlot.setData(lineData);
+        thisPlot.invalidate(); // refresh
+
+        // these might not work.
+        // limit the number of visible entries
+        thisPlot.setVisibleXRangeMaximum(50);
+        // move to the latest entry
+        thisPlot.moveViewToX(lineData.getEntryCount());
+
+    }
+
     // 5. add new entry. this is used in thread for real time plot
+    // this is for heart rate and temperature
     public static void addEntry(LineChart thisPlot, String dataSetLabel, Integer thisValue) {
         // this is only for one line
-
+        int colorID = Color.RED;
+        if (thisPlot == tempChart) {
+            colorID = Color.GREEN;
+        }
         LineData data = thisPlot.getData();
         if (data != null) {
             ILineDataSet set = data.getDataSetByIndex(0);
             // set.addEntry(...); // can be called as well
             if (set == null) {
-                set = createSet(dataSetLabel);
+                set = createSet(dataSetLabel, colorID);
                 data.addDataSet(set);
             }
 
@@ -344,7 +425,7 @@ public class SignalActivity extends AppCompatActivity {
             ILineDataSet set = data.getDataSetByIndex(0);
             // set.addEntry(...); // can be called as well
             if (set == null) {
-                set = createSet(dataSetLabel);
+                set = createSet(dataSetLabel, Color.GREEN);
                 data.addDataSet(set);
             }
 
@@ -356,7 +437,7 @@ public class SignalActivity extends AppCompatActivity {
             thisPlot.notifyDataSetChanged();
 
             // limit the number of visible entries
-            thisPlot.setVisibleXRangeMaximum(150);
+            thisPlot.setVisibleXRangeMaximum(100);
             // mChart.setVisibleYRange(30, AxisDependency.LEFT);
 
             // move to the latest entry
@@ -364,7 +445,43 @@ public class SignalActivity extends AppCompatActivity {
 
         }
     }
+    // this is for gyroscope and accelerometer
+    public static void addEntry(LineChart thisPlot, String dataSetLabel, ArrayList<Integer> Values) {
+        // this is only for one line
 
+        LineData data = thisPlot.getData();
+        if (data != null) {
+
+            Integer i = 0;
+            int colorID = Color.RED;
+
+            for (Integer thisValue : Values){
+                if (i == 1){
+                    colorID = Color.YELLOW;
+                } else if (i == 2) {
+                    colorID = Color.BLUE;
+                }
+                ILineDataSet set = data.getDataSetByIndex(i);
+                if (set == null) {
+                    set = createSet(dataSetLabel, colorID);
+                    data.addDataSet(set);
+                }
+                data.addEntry(new Entry(set.getEntryCount(), thisValue), i);
+                i++;
+            }
+            // let the chart know it's data has changed
+            data.notifyDataChanged();
+            thisPlot.notifyDataSetChanged();
+
+            // limit the number of visible entries
+            thisPlot.setVisibleXRangeMaximum(100);
+            // mChart.setVisibleYRange(30, AxisDependency.LEFT);
+
+            // move to the latest entry
+            thisPlot.moveViewToX(data.getEntryCount());
+
+        }
+    }
 
     // ==========================================================================
     private void constructDataSet(List<Entry> data, LineChart thisPlot, String label, Integer dataSetIndex ) {
@@ -378,10 +495,9 @@ public class SignalActivity extends AppCompatActivity {
         if (dataSet != null) {
             ILineDataSet set = dataSet.getDataSetByIndex(dataSetIndex); // this is the first line
             if (set == null) {
-                set = createSet(label); // dataset is configured already
+                set = createSet(label, Color.BLACK); // dataset is configured already
                 dataSet.addDataSet(set);
             }
-            // set.addEntry(...); // can be called as well
 
             // now add new entries to this line
             for (Entry thisEntry : data) {

@@ -28,10 +28,13 @@ import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Set;
 import java.util.UUID;
 
+import static com.example.btledblinker.SignalActivity.accChart;
+import static com.example.btledblinker.SignalActivity.gyroChart;
 import static com.example.btledblinker.SignalActivity.hrChart;
 import static com.example.btledblinker.SignalActivity.tempChart;
 
@@ -538,6 +541,16 @@ public class MainActivity extends Activity {
                                     {
                                         gydb.insertContact(Integer.valueOf(gy[0].substring(2, gy[0].length())), Integer.valueOf(gy[1]),
                                                 Integer.valueOf(gy[2]), simpleDateFormat.format(date).toString());
+                                        try {
+                                            ArrayList<Integer> values = new ArrayList<>();
+                                            values.add(Integer.valueOf(gy[0].substring(2, gy[0].length())));
+                                            values.add(Integer.valueOf(gy[1]));
+                                            values.add(Integer.valueOf(gy[2]));
+                                            SignalActivity.addEntry(gyroChart,"temp", values);
+
+                                        } catch (Exception e) {
+                                            Log.d("BT thread", "update HR chart, error :" + e.toString());
+                                        }
                                     }
                                     catch(Exception e)
                                     {
@@ -551,6 +564,16 @@ public class MainActivity extends Activity {
                                     {
                                         acdb.insertContact(Integer.valueOf(ac[0].substring(2, ac[0].length())), Integer.valueOf(ac[1]),
                                                 Integer.valueOf(ac[2]), simpleDateFormat.format(date).toString());
+                                        try {
+                                            ArrayList<Integer> values = new ArrayList<>();
+                                            values.add(Integer.valueOf(ac[0].substring(2, ac[0].length())));
+                                            values.add(Integer.valueOf(ac[1]));
+                                            values.add(Integer.valueOf(ac[2]));
+                                            SignalActivity.addEntry(accChart,"temp", values);
+
+                                        } catch (Exception e) {
+                                            Log.d("BT thread", "update HR chart, error :" + e.toString());
+                                        }
                                     }
                                     catch(Exception e)
                                     {

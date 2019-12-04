@@ -30,6 +30,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+      
+        <service
+            android:enabled="true"
+            android:name=".MyService"
+            android:label="MyService">
+        </service>
+
 
         <service android:name=".HelloIntentService" />
     </application>
